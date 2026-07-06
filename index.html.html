@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Francisco</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #222;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0; --muted: #888;
+    --accent: #6c63ff; --accent2: #8b83ff;
+    --green: #22c55e; --amber: #f59e0b; --red: #ef4444; --blue: #3b82f6; --wa: #25d366;
+    --radius: 12px; --radius-sm: 8px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+  .shell { display: flex; min-height: 100vh; }
+  .sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0 24px; position: fixed; top: 0; left: 0; bottom: 0; }
+  .sidebar-logo { padding: 0 20px 28px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .sidebar-logo .name { font-size: 16px; font-weight: 600; }
+  .sidebar-logo .role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 13px; color: var(--muted); cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: color 0.15s, background 0.15s; position: relative; }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--text); background: rgba(108,99,255,0.15); }
+  .nav-item.active::before { content: ''; position: absolute; left: 0; width: 3px; height: 36px; background: var(--accent); border-radius: 0 2px 2px 0; }
+  .nav-icon { font-size: 16px; }
+  .sidebar-bottom { margin-top: auto; padding: 16px 20px 0; border-top: 1px solid var(--border); }
+  .token-status { font-size: 11px; color: var(--muted); }
+  .token-input { width: 100%; margin-top: 8px; font-size: 12px; padding: 6px 8px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); outline: none; }
+  .token-input:focus { border-color: var(--accent); }
+  .save-token-btn { margin-top: 6px; width: 100%; font-size: 12px; padding: 6px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+  .save-token-btn:hover { opacity: 0.88; }
+  .main { margin-left: 220px; flex: 1; padding: 32px 36px; max-width: 1100px; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-size: 22px; font-weight: 600; }
+  .page-header .sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+  .metric-card .label { font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-card .value { font-size: 26px; font-weight: 600; line-height: 1; }
+  .metric-card .delta { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .metric-card .goal-line { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .metric-card.accent-green .value { color: var(--green); }
+  .metric-card.accent-blue .value { color: var(--blue); }
+  .metric-card.accent-amber .value { color: var(--amber); }
+  .metric-card.accent-purple .value { color: var(--accent2); }
+  .metric-card.accent-red .value { color: var(--red); }
+  .metric-card.accent-wa .value { color: var(--wa); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+  .card h2 { font-size: 15px; font-weight: 600; margin-bottom: 18px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .form-row.five { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .field label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
+  .field input, .field textarea, .field select { width: 100%; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; outline: none; font-family: inherit; transition: border-color 0.15s; }
+  .field input:focus, .field textarea:focus { border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+  .btn-secondary:hover { background: #2a2a2a; }
+  .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+  .btn-danger:hover { background: rgba(239,68,68,0.25); }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { text-align: left; padding: 10px 14px; color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody td { padding: 11px 14px; vertical-align: middle; }
+  tbody td.muted { color: var(--muted); }
+  .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-amber { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .badge-wa { background: rgba(37,211,102,0.15); color: var(--wa); }
+  .progress-wrap { margin-bottom: 16px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .progress-label .goal-name { color: var(--text); }
+  .progress-label .goal-count { color: var(--muted); font-size: 12px; }
+  .progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .chart-container { position: relative; height: 200px; margin-top: 8px; }
+  #toast { position: fixed; bottom: 28px; right: 28px; background: var(--surface); border: 1px solid var(--border2); color: var(--text); padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13px; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 999; }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  .sync-bar { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .sync-dot.ok { background: var(--green); }
+  .sync-dot.error { background: var(--red); }
+  .sync-dot.loading { background: var(--amber); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .actions-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .meta-monthly { background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(108,99,255,0.04)); border: 1px solid rgba(108,99,255,0.25); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 24px; }
+  .meta-monthly .big { font-size: 36px; font-weight: 700; color: var(--accent2); line-height: 1; }
+  .meta-monthly .meta-info { flex: 1; }
+  .meta-monthly .meta-title { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .meta-monthly .meta-sub { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  input[type="date"], input[type="month"] { color-scheme: dark; }
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px 16px; }
+    .form-row.five { grid-template-columns: 1fr 1fr; }
+    .section-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div class="shell">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="name">Francisco</div>
+      <div class="role">Dashboard de ventas</div>
+    </div>
+    <button class="nav-item active" onclick="showPage('resumen',this)"><span class="nav-icon">📊</span> Resumen</button>
+    <button class="nav-item" onclick="showPage('registro',this)"><span class="nav-icon">✏️</span> Registrar día</button>
+    <button class="nav-item" onclick="showPage('historial',this)"><span class="nav-icon">📋</span> Historial</button>
+    <button class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span> Metas</button>
+    <div class="sidebar-bottom">
+      <div class="token-status">GitHub token</div>
+      <input type="password" class="token-input" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+      <button class="save-token-btn" onclick="saveToken()">Guardar token</button>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- RESUMEN -->
+    <div class="page active" id="page-resumen">
+      <div class="page-header">
+        <h1>Resumen</h1>
+        <div class="sub" id="fecha-hoy"></div>
+      </div>
+      <div class="sync-bar">
+        <div class="sync-dot" id="sync-dot"></div>
+        <span id="sync-label">Cargando…</span>
+        <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;margin-left:auto" onclick="loadData()">↻ Actualizar</button>
+      </div>
+
+      <!-- META MENSUAL LEADS -->
+      <div class="meta-monthly">
+        <div>
+          <div class="meta-title">Meta mensual · Leads</div>
+          <div class="big" id="leads-mes-count">0</div>
+          <div style="margin-top:10px">
+            <div class="progress-bar" style="height:8px;width:220px">
+              <div class="progress-fill" id="leads-mes-bar" style="background:var(--accent2);width:0%"></div>
+            </div>
+          </div>
+          <div class="meta-sub" id="leads-mes-label"></div>
+        </div>
+        <div class="meta-info" style="text-align:right">
+          <div style="font-size:28px;font-weight:600;color:var(--muted)" id="leads-mes-meta">/ 72</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">este mes</div>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS HOY -->
+      <div class="metrics-grid">
+        <div class="metric-card accent-purple">
+          <div class="label">Leads hoy</div>
+          <div class="value" id="m-leads">—</div>
+          <div class="delta" id="m-leads-d"></div>
+        </div>
+        <div class="metric-card accent-blue">
+          <div class="label">Llamadas hoy</div>
+          <div class="value" id="m-calls">—</div>
+          <div class="goal-line" id="m-calls-g"></div>
+          <div class="delta" id="m-calls-d"></div>
+        </div>
+        <div class="metric-card accent-amber">
+          <div class="label">Mails hoy</div>
+          <div class="value" id="m-mails">—</div>
+          <div class="goal-line" id="m-mails-g"></div>
+          <div class="delta" id="m-mails-d"></div>
+        </div>
+        <div class="metric-card accent-wa">
+          <div class="label">WhatsApp hoy</div>
+          <div class="value" id="m-wa">—</div>
+          <div class="delta" id="m-wa-d"></div>
+        </div>
+        <div class="metric-card accent-green">
+          <div class="label">Ventas cerradas hoy</div>
+          <div class="value" id="m-sales">—</div>
+          <div class="delta" id="m-sales-d"></div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <div class="card">
+          <h2>Actividad esta semana</h2>
+          <div class="chart-container">
+            <canvas id="chartSemana" role="img" aria-label="Actividad semanal">Actividad de la semana.</canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Metas diarias · hoy</h2>
+          <div id="metas-progress"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Actividades de hoy</h2>
+        <div id="nota-hoy" style="color:var(--muted);font-size:14px;">Sin registro para hoy aún.</div>
+      </div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div class="page" id="page-registro">
+      <div class="page-header">
+        <h1>Registrar día</h1>
+        <div class="sub">Agrega o edita el registro del día</div>
+      </div>
+      <div class="card">
+        <h2>Fecha</h2>
+        <div class="form-row single">
+          <div class="field"><label>Fecha del registro</label><input type="date" id="reg-fecha"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Métricas del día</h2>
+        <div class="form-row five">
+          <div class="field"><label>Leads creados</label><input type="number" id="reg-leads" min="0" placeholder="0"></div>
+          <div class="field"><label>Llamadas hechas</label><input type="number" id="reg-calls" min="0" placeholder="0"></div>
+          <div class="field"><label>Mails enviados</label><input type="number" id="reg-mails" min="0" placeholder="0"></div>
+          <div class="field"><label>Mensajes WhatsApp</label><input type="number" id="reg-wa" min="0" placeholder="0"></div>
+          <div class="field"><label>Ventas cerradas</label><input type="number" id="reg-sales" min="0" placeholder="0"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Actividades del día</h2>
+        <div class="form-row single">
+          <div class="field"><label>¿Qué hiciste hoy?</label><textarea id="reg-actividades" placeholder="Ej: Llamé a 3 prospectos, seguimiento propuesta Empresa X, reunión de pipeline…"></textarea></div>
+        </div>
+        <div class="form-row single">
+          <div class="field"><label>Notas adicionales</label><textarea id="reg-notas" placeholder="Bloqueos, aprendizajes, próximos pasos…"></textarea></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-primary" onclick="saveEntry()">💾 Guardar registro</button>
+        <button class="btn btn-secondary" onclick="clearForm()">Limpiar</button>
+      </div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="page" id="page-historial">
+      <div class="page-header"><h1>Historial</h1><div class="sub">Todos tus registros</div></div>
+      <div class="actions-row">
+        <input type="month" id="filtro-mes" style="padding:8px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;outline:none">
+        <button class="btn btn-secondary" onclick="filterHistory()">Filtrar</button>
+        <button class="btn btn-secondary" onclick="filterHistory(true)">Ver todo</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fecha</th><th>Leads</th><th>Llamadas</th><th>Mails</th><th>WhatsApp</th><th>Ventas</th><th>Actividades</th><th></th></tr></thead>
+            <tbody id="tabla-historial"><tr><td colspan="8" class="empty-state">Sin registros aún.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- METAS -->
+    <div class="page" id="page-metas">
+      <div class="page-header"><h1>Metas</h1><div class="sub">Configura tus objetivos</div></div>
+      <div class="card">
+        <h2>Meta mensual</h2>
+        <div class="form-row single" style="max-width:200px">
+          <div class="field"><label>Leads / mes</label><input type="number" id="meta-leads-mes" min="0" placeholder="72"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Metas diarias</h2>
+        <div class="form-row three">
+          <div class="field"><label>Llamadas / día</label><input type="number" id="meta-calls-dia" min="0" placeholder="8"></div>
+          <div class="field"><label>Mails / día</label><input type="number" id="meta-mails-dia" min="0" placeholder="10"></div>
+          <div class="field"><label>WhatsApp / día</label><input type="number" id="meta-wa-dia" min="0" placeholder="0"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveMetas()">Guardar metas</button>
+      </div>
+      <div class="card">
+        <h2>Progreso hoy vs metas diarias</h2>
+        <div id="metas-detalle"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const GH_USER = 'TU_USUARIO';
+const GH_REPO = 'mi-dashboard';
+const GH_FILE = 'data.json';
+const GH_BRANCH = 'main';
+const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+
+let state = {
+  entries: [],
+  metas: { leadsMes: 72, callsDia: 8, mailsDia: 10, waDia: 0 }
+};
+let fileSha = null;
+let weekChart = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('reg-fecha').value = today;
+  document.getElementById('fecha-hoy').textContent = formatDate(today);
+  const t = localStorage.getItem('gh_token');
+  if (t) document.getElementById('gh-token').value = '••••••••••••';
+  loadData();
+});
+
+function saveToken() {
+  const val = document.getElementById('gh-token').value.trim();
+  if (!val || val.startsWith('•')) return toast('Ingresa un token válido');
+  localStorage.setItem('gh_token', val);
+  document.getElementById('gh-token').value = '••••••••••••';
+  toast('Token guardado ✓');
+  loadData();
+}
+
+async function loadData() {
+  setSyncStatus('loading', 'Sincronizando…');
+  const token = localStorage.getItem('gh_token');
+  if (!token) { setSyncStatus('error', 'Sin token — datos locales'); loadLocal(); return; }
+  try {
+    const res = await fetch(GH_API + '?ref=' + GH_BRANCH, {
+      headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (res.status === 404) { fileSha = null; setSyncStatus('ok', 'Conectado · sin datos aún'); renderAll(); return; }
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    fileSha = json.sha;
+    const decoded = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    state = {
+      entries: decoded.entries || [],
+      metas: Object.assign({ leadsMes: 72, callsDia: 8, mailsDia: 10, waDia: 0 }, decoded.metas)
+    };
+    setSyncStatus('ok', 'Sincronizado · ' + new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }));
+    saveLocal(); renderAll();
+  } catch (e) {
+    setSyncStatus('error', 'Error: ' + e.message);
+    loadLocal();
+  }
+}
+
+async function pushData() {
+  const token = localStorage.getItem('gh_token');
+  if (!token) { saveLocal(); toast('Guardado local (sin token)'); return; }
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
+  const body = { message: 'update data', content, branch: GH_BRANCH };
+  if (fileSha) body.sha = fileSha;
+  setSyncStatus('loading', 'Guardando en GitHub…');
+  try {
+    const res = await fetch(GH_API, {
+      method: 'PUT',
+      headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const err = await res.json(); throw new Error(err.message); }
+    const json = await res.json();
+    fileSha = json.content.sha;
+    setSyncStatus('ok', 'Guardado ✓ · ' + new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }));
+    saveLocal(); toast('Registro guardado ✓');
+  } catch (e) {
+    setSyncStatus('error', 'Error: ' + e.message);
+    saveLocal(); toast('Guardado local · error GitHub: ' + e.message);
+  }
+}
+
+function saveLocal() { localStorage.setItem('dashboard_state', JSON.stringify(state)); }
+function loadLocal() {
+  const s = localStorage.getItem('dashboard_state');
+  if (s) { try { state = JSON.parse(s); } catch(e) {} }
+  renderAll();
+}
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  renderAll();
+}
+
+function saveEntry() {
+  const fecha = document.getElementById('reg-fecha').value;
+  if (!fecha) return toast('Elige una fecha');
+  const entry = {
+    fecha,
+    leads: parseInt(document.getElementById('reg-leads').value) || 0,
+    calls: parseInt(document.getElementById('reg-calls').value) || 0,
+    mails: parseInt(document.getElementById('reg-mails').value) || 0,
+    wa: parseInt(document.getElementById('reg-wa').value) || 0,
+    sales: parseInt(document.getElementById('reg-sales').value) || 0,
+    actividades: document.getElementById('reg-actividades').value.trim(),
+    notas: document.getElementById('reg-notas').value.trim(),
+    ts: new Date().toISOString()
+  };
+  const idx = state.entries.findIndex(e => e.fecha === fecha);
+  if (idx >= 0) state.entries[idx] = entry; else state.entries.push(entry);
+  state.entries.sort((a, b) => b.fecha.localeCompare(a.fecha));
+  pushData(); renderAll();
+}
+
+function deleteEntry(fecha) {
+  if (!confirm('¿Borrar el registro del ' + formatDate(fecha) + '?')) return;
+  state.entries = state.entries.filter(e => e.fecha !== fecha);
+  pushData(); renderAll(); toast('Registro eliminado');
+}
+
+function editEntry(fecha) {
+  const e = state.entries.find(e => e.fecha === fecha);
+  if (!e) return;
+  document.getElementById('reg-fecha').value = e.fecha;
+  document.getElementById('reg-leads').value = e.leads;
+  document.getElementById('reg-calls').value = e.calls;
+  document.getElementById('reg-mails').value = e.mails;
+  document.getElementById('reg-wa').value = e.wa || 0;
+  document.getElementById('reg-sales').value = e.sales;
+  document.getElementById('reg-actividades').value = e.actividades;
+  document.getElementById('reg-notas').value = e.notas;
+  showPage('registro');
+  document.querySelectorAll('.nav-item')[1].classList.add('active');
+  document.querySelectorAll('.nav-item')[0].classList.remove('active');
+}
+
+function clearForm() {
+  ['reg-leads','reg-calls','reg-mails','reg-wa','reg-sales','reg-actividades','reg-notas'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('reg-fecha').value = new Date().toISOString().split('T')[0];
+}
+
+function saveMetas() {
+  state.metas = {
+    leadsMes: parseInt(document.getElementById('meta-leads-mes').value) || 72,
+    callsDia: parseInt(document.getElementById('meta-calls-dia').value) || 8,
+    mailsDia: parseInt(document.getElementById('meta-mails-dia').value) || 10,
+    waDia: parseInt(document.getElementById('meta-wa-dia').value) || 0,
+  };
+  pushData(); renderAll(); toast('Metas guardadas ✓');
+}
+
+function renderAll() { renderResumen(); renderHistorial(); renderMetas(); }
+
+function renderResumen() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayEntry = state.entries.find(e => e.fecha === today);
+  const yday = getPrevEntry(today);
+
+  setMetric('m-leads', todayEntry?.leads, yday?.leads);
+  setMetric('m-calls', todayEntry?.calls, yday?.calls);
+  setMetric('m-mails', todayEntry?.mails, yday?.mails);
+  setMetric('m-wa', todayEntry?.wa, yday?.wa);
+  setMetric('m-sales', todayEntry?.sales, yday?.sales);
+
+  // Goal lines for daily metrics
+  const gCalls = document.getElementById('m-calls-g');
+  const gMails = document.getElementById('m-mails-g');
+  if (gCalls) gCalls.textContent = 'meta: ' + state.metas.callsDia + ' / día';
+  if (gMails) gMails.textContent = 'meta: ' + state.metas.mailsDia + ' / día';
+
+  // Meta mensual leads
+  const mesActual = today.slice(0, 7);
+  const leadsDelMes = state.entries.filter(e => e.fecha.startsWith(mesActual)).reduce((s, e) => s + (e.leads || 0), 0);
+  const metaMes = state.metas.leadsMes || 72;
+  const pctMes = Math.min(100, Math.round((leadsDelMes / metaMes) * 100));
+  document.getElementById('leads-mes-count').textContent = leadsDelMes;
+  document.getElementById('leads-mes-meta').textContent = '/ ' + metaMes;
+  document.getElementById('leads-mes-bar').style.width = pctMes + '%';
+  const restantes = metaMes - leadsDelMes;
+  document.getElementById('leads-mes-label').textContent =
+    restantes > 0 ? `Faltan ${restantes} leads para la meta del mes (${pctMes}%)` : '¡Meta del mes alcanzada! 🎉';
+
+  document.getElementById('nota-hoy').textContent =
+    todayEntry ? (todayEntry.actividades || todayEntry.notas || 'Sin nota.') : 'Sin registro para hoy aún. Ve a "Registrar día" →';
+
+  renderWeekChart();
+  renderMetasProgress('metas-progress');
+}
+
+function setMetric(id, val, prev) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val !== undefined ? val : '—';
+  const dEl = document.getElementById(id + '-d');
+  if (dEl && val !== undefined && prev !== undefined) {
+    const diff = val - prev;
+    dEl.textContent = (diff >= 0 ? '↑ +' : '↓ ') + diff + ' vs ayer';
+    dEl.style.color = diff >= 0 ? 'var(--green)' : 'var(--red)';
+  } else if (dEl) { dEl.textContent = ''; }
+}
+
+function renderWeekChart() {
+  const days = getWeekDays();
+  const labels = days.map(d => formatShortDate(d));
+  const get = (d, k) => (state.entries.find(e => e.fecha === d) || {})[k] || 0;
+  const ctx = document.getElementById('chartSemana');
+  if (!ctx) return;
+  if (weekChart) weekChart.destroy();
+  weekChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Leads', data: days.map(d => get(d,'leads')), backgroundColor: 'rgba(108,99,255,0.75)', borderRadius: 4 },
+        { label: 'Llamadas', data: days.map(d => get(d,'calls')), backgroundColor: 'rgba(59,130,246,0.75)', borderRadius: 4 },
+        { label: 'Mails', data: days.map(d => get(d,'mails')), backgroundColor: 'rgba(245,158,11,0.75)', borderRadius: 4 },
+        { label: 'WA', data: days.map(d => get(d,'wa')), backgroundColor: 'rgba(37,211,102,0.75)', borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function renderMetasProgress(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const today = new Date().toISOString().split('T')[0];
+  const e = state.entries.find(e => e.fecha === today) || {};
+  const items = [
+    { key: 'calls', label: 'Llamadas', actual: e.calls || 0, meta: state.metas.callsDia, color: '#3b82f6' },
+    { key: 'mails', label: 'Mails', actual: e.mails || 0, meta: state.metas.mailsDia, color: '#f59e0b' },
+    { key: 'wa', label: 'WhatsApp', actual: e.wa || 0, meta: state.metas.waDia, color: '#25d366' },
+  ];
+  container.innerHTML = items.map(item => {
+    const meta = item.meta || 1;
+    const pct = Math.min(100, Math.round((item.actual / meta) * 100));
+    const color = item.actual >= meta ? 'var(--green)' : item.color;
+    return `
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span class="goal-name">${item.label}</span>
+          <span class="goal-count">${item.actual} / ${meta} · ${pct}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function renderHistorial(filter) {
+  const tbody = document.getElementById('tabla-historial');
+  let entries = [...state.entries];
+  if (filter) entries = entries.filter(e => e.fecha.startsWith(filter));
+  if (!entries.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Sin registros.</td></tr>'; return; }
+  tbody.innerHTML = entries.map(e => `
+    <tr>
+      <td>${formatDate(e.fecha)}</td>
+      <td><span class="badge badge-blue">${e.leads}</span></td>
+      <td>${e.calls}</td>
+      <td>${e.mails}</td>
+      <td><span class="badge badge-wa">${e.wa || 0}</span></td>
+      <td><span class="badge ${e.sales > 0 ? 'badge-green' : 'badge-amber'}">${e.sales}</span></td>
+      <td class="muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.actividades || '—'}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="editEntry('${e.fecha}')">Editar</button>
+        <button class="btn btn-danger" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="deleteEntry('${e.fecha}')">Borrar</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderMetas() {
+  const m = state.metas;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('meta-leads-mes', m.leadsMes);
+  set('meta-calls-dia', m.callsDia);
+  set('meta-mails-dia', m.mailsDia);
+  set('meta-wa-dia', m.waDia);
+  renderMetasProgress('metas-detalle');
+}
+
+function filterHistory(all) {
+  if (all) { renderHistorial(); return; }
+  const mes = document.getElementById('filtro-mes').value;
+  renderHistorial(mes || undefined);
+}
+
+function getWeekDays() {
+  const today = new Date();
+  const day = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday); d.setDate(monday.getDate() + i);
+    return d.toISOString().split('T')[0];
+  });
+}
+
+function getPrevEntry(fecha) {
+  const idx = state.entries.findIndex(e => e.fecha === fecha);
+  return idx >= 0 && idx + 1 < state.entries.length ? state.entries[idx + 1] : undefined;
+}
+
+function formatDate(d) {
+  const [y, m, day] = d.split('-');
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function formatShortDate(d) {
+  const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  return days[new Date(d + 'T12:00:00').getDay()];
+}
+
+function setSyncStatus(s, msg) {
+  document.getElementById('sync-dot').className = 'sync-dot ' + s;
+  document.getElementById('sync-label').textContent = msg;
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
