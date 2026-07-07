@@ -1,6 +1,17 @@
 {
   "entries": [
     {
+      "fecha": "2026-07-07",
+      "leads": 0,
+      "calls": 0,
+      "mails": 70,
+      "wa": 4,
+      "sales": 0,
+      "actividades": "",
+      "notas": "",
+      "ts": "2026-07-07T16:15:29.156Z"
+    },
+    {
       "fecha": "2026-07-06",
       "leads": 72,
       "calls": 0,
