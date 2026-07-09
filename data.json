@@ -1,6 +1,19 @@
 {
   "entries": [
     {
+      "fecha": "2026-07-08",
+      "leads": 0,
+      "calls": 0,
+      "mails": 30,
+      "wa": 0,
+      "meet": 1,
+      "sales": 0,
+      "notaImportante": "Se tuvo reunión con Unlimited Experiences, sacada de la base de turismo, no llegan al TPV. Se mandaron otros 30 correos.",
+      "actividades": "",
+      "notas": "",
+      "ts": "2026-07-09T16:16:30.415Z"
+    },
+    {
       "fecha": "2026-07-07",
       "leads": 0,
       "calls": 0,
@@ -25,6 +38,8 @@
   ],
   "metas": {
     "leadsMes": 72,
+    "meetMes": 8,
+    "meetSem": 2,
     "callsDia": 8,
     "mailsDia": 10,
     "waDia": 8
