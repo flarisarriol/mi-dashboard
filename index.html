@@ -11,13 +11,14 @@
     --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
     --text: #f0f0f0; --muted: #888;
     --accent: #6c63ff; --accent2: #8b83ff;
-    --green: #22c55e; --amber: #f59e0b; --red: #ef4444; --blue: #3b82f6; --wa: #25d366;
+    --green: #22c55e; --amber: #f59e0b; --red: #ef4444; --blue: #3b82f6;
+    --wa: #25d366; --pink: #ec4899;
     --radius: 12px; --radius-sm: 8px;
   }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
   .shell { display: flex; min-height: 100vh; }
-  .sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0 24px; position: fixed; top: 0; left: 0; bottom: 0; }
-  .sidebar-logo { padding: 0 20px 28px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0 24px; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; }
+  .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
   .sidebar-logo .name { font-size: 16px; font-weight: 600; }
   .sidebar-logo .role { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 13px; color: var(--muted); cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: color 0.15s, background 0.15s; position: relative; }
@@ -26,39 +27,80 @@
   .nav-item.active::before { content: ''; position: absolute; left: 0; width: 3px; height: 36px; background: var(--accent); border-radius: 0 2px 2px 0; }
   .nav-icon { font-size: 16px; }
   .sidebar-bottom { margin-top: auto; padding: 16px 20px 0; border-top: 1px solid var(--border); }
-  .token-status { font-size: 11px; color: var(--muted); }
-  .token-input { width: 100%; margin-top: 8px; font-size: 12px; padding: 6px 8px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); outline: none; }
+  .token-status { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .token-input { width: 100%; font-size: 12px; padding: 6px 8px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); outline: none; }
   .token-input:focus { border-color: var(--accent); }
   .save-token-btn { margin-top: 6px; width: 100%; font-size: 12px; padding: 6px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; }
   .save-token-btn:hover { opacity: 0.88; }
-  .main { margin-left: 220px; flex: 1; padding: 32px 36px; max-width: 1100px; }
+  .main { margin-left: 220px; flex: 1; padding: 32px 36px; max-width: 1140px; }
   .page { display: none; }
   .page.active { display: block; }
-  .page-header { margin-bottom: 28px; }
+  .page-header { margin-bottom: 22px; }
   .page-header h1 { font-size: 22px; font-weight: 600; }
   .page-header .sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
-  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 12px; margin-bottom: 24px; }
-  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
-  .metric-card .label { font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* METRIC CARDS */
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px 17px; }
+  .metric-card .label { font-size: 11px; color: var(--muted); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.05em; }
   .metric-card .value { font-size: 26px; font-weight: 600; line-height: 1; }
-  .metric-card .delta { font-size: 11px; color: var(--muted); margin-top: 5px; }
   .metric-card .goal-line { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .metric-card.accent-green .value { color: var(--green); }
-  .metric-card.accent-blue .value { color: var(--blue); }
-  .metric-card.accent-amber .value { color: var(--amber); }
-  .metric-card.accent-purple .value { color: var(--accent2); }
-  .metric-card.accent-red .value { color: var(--red); }
-  .metric-card.accent-wa .value { color: var(--wa); }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
-  .card h2 { font-size: 15px; font-weight: 600; margin-bottom: 18px; }
+  .metric-card .delta { font-size: 11px; margin-top: 4px; }
+  .accent-green .value { color: var(--green); }
+  .accent-blue .value { color: var(--blue); }
+  .accent-amber .value { color: var(--amber); }
+  .accent-purple .value { color: var(--accent2); }
+  .accent-wa .value { color: var(--wa); }
+  .accent-pink .value { color: var(--pink); }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 18px; }
+  .card h2 { font-size: 12px; font-weight: 600; margin-bottom: 16px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* NOTA IMPORTANTE */
+  .nota-importante-box { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.3); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px; }
+  .ni-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .ni-title { font-size: 13px; font-weight: 600; color: var(--accent2); }
+  .ni-date { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .ni-text { font-size: 14px; color: var(--text); line-height: 1.6; white-space: pre-wrap; }
+  .ni-empty { font-size: 13px; color: var(--muted); }
+
+  /* MONTH BANNER */
+  .month-banner { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 18px; }
+  .month-banner h2 { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .month-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 16px; }
+  .ms-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .ms-value { font-size: 22px; font-weight: 600; }
+
+  /* META LEADS MENSUAL */
+  .meta-monthly { background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(108,99,255,0.04)); border: 1px solid rgba(108,99,255,0.25); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 18px; display: flex; align-items: center; gap: 24px; }
+  .meta-monthly .big { font-size: 34px; font-weight: 700; color: var(--accent2); line-height: 1; }
+  .meta-monthly .meta-title { font-size: 11px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .meta-monthly .meta-sub { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  /* LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  /* FORMS */
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .form-row.single { grid-template-columns: 1fr; }
   .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
-  .form-row.five { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .form-row.six { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
   .field label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
-  .field input, .field textarea, .field select { width: 100%; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; outline: none; font-family: inherit; transition: border-color 0.15s; }
+  .field input, .field textarea { width: 100%; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; outline: none; font-family: inherit; transition: border-color 0.15s; }
   .field input:focus, .field textarea:focus { border-color: var(--accent); }
-  .field textarea { resize: vertical; min-height: 80px; }
+  .field textarea { resize: vertical; min-height: 78px; }
+  .field textarea.highlight { border-color: rgba(108,99,255,0.4); background: rgba(108,99,255,0.05); }
+  .field textarea.highlight:focus { border-color: var(--accent); }
+
+  /* ACUMULADO PREVIO */
+  .acum-banner { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 16px; font-size: 13px; }
+  .acum-banner strong { color: var(--blue); }
+  .acum-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .acum-chip { background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 3px 10px; font-size: 12px; color: var(--muted); }
+  .acum-chip span { color: var(--text); font-weight: 600; }
+
+  /* BUTTONS */
   .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
   .btn:active { transform: scale(0.98); }
   .btn-primary { background: var(--accent); color: #fff; }
@@ -67,54 +109,73 @@
   .btn-secondary:hover { background: #2a2a2a; }
   .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
   .btn-danger:hover { background: rgba(239,68,68,0.25); }
+
+  /* TABLE */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { text-align: left; padding: 10px 14px; color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  thead th { text-align: left; padding: 10px 14px; color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); white-space: nowrap; }
   tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   tbody tr:hover { background: rgba(255,255,255,0.03); }
-  tbody td { padding: 11px 14px; vertical-align: middle; }
-  tbody td.muted { color: var(--muted); }
+  tbody td { padding: 10px 14px; vertical-align: middle; }
+  tbody td.muted { color: var(--muted); font-size: 12px; }
   .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+
+  /* BADGES */
   .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
   .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
   .badge-amber { background: rgba(245,158,11,0.15); color: var(--amber); }
-  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
   .badge-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
   .badge-wa { background: rgba(37,211,102,0.15); color: var(--wa); }
-  .progress-wrap { margin-bottom: 16px; }
+  .badge-pink { background: rgba(236,72,153,0.15); color: var(--pink); }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 14px; }
   .progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
   .progress-label .goal-name { color: var(--text); }
   .progress-label .goal-count { color: var(--muted); font-size: 12px; }
   .progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+
+  /* CHART */
   .chart-container { position: relative; height: 200px; margin-top: 8px; }
-  #toast { position: fixed; bottom: 28px; right: 28px; background: var(--surface); border: 1px solid var(--border2); color: var(--text); padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13px; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 999; }
-  #toast.show { opacity: 1; transform: translateY(0); }
-  .sync-bar { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
-  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+
+  /* SYNC */
+  .sync-bar { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
   .sync-dot.ok { background: var(--green); }
   .sync-dot.error { background: var(--red); }
   .sync-dot.loading { background: var(--amber); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
-  .actions-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
-  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .meta-monthly { background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(108,99,255,0.04)); border: 1px solid rgba(108,99,255,0.25); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 24px; }
-  .meta-monthly .big { font-size: 36px; font-weight: 700; color: var(--accent2); line-height: 1; }
-  .meta-monthly .meta-info { flex: 1; }
-  .meta-monthly .meta-title { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
-  .meta-monthly .meta-sub { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  input[type="date"], input[type="month"] { color-scheme: dark; }
-  @media (max-width: 700px) {
+
+  /* TOAST */
+  #toast { position: fixed; bottom: 28px; right: 28px; background: var(--surface); border: 1px solid var(--border2); color: var(--text); padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13px; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 999; }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  /* MONTH NAV */
+  .month-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+
+  /* SECTION LABEL */
+  .section-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; margin-top: 2px; }
+
+  /* DATE TOGGLE */
+  .date-toggle { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .date-toggle label { font-size: 13px; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .date-toggle input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+
+  input[type="date"] { color-scheme: dark; }
+  @media (max-width: 800px) {
     .sidebar { display: none; }
     .main { margin-left: 0; padding: 20px 16px; }
-    .form-row.five { grid-template-columns: 1fr 1fr; }
-    .section-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .form-row.six { grid-template-columns: 1fr 1fr 1fr; }
   }
 </style>
 </head>
 <body>
 <div id="toast"></div>
 <div class="shell">
+
+  <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="sidebar-logo">
       <div class="name">Francisco</div>
@@ -125,7 +186,7 @@
     <button class="nav-item" onclick="showPage('historial',this)"><span class="nav-icon">📋</span> Historial</button>
     <button class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span> Metas</button>
     <div class="sidebar-bottom">
-      <div class="token-status">GitHub token</div>
+      <div class="token-status">GitHub token (solo tú)</div>
       <input type="password" class="token-input" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
       <button class="save-token-btn" onclick="saveToken()">Guardar token</button>
     </div>
@@ -133,7 +194,7 @@
 
   <main class="main">
 
-    <!-- RESUMEN -->
+    <!-- ══════════ RESUMEN ══════════ -->
     <div class="page active" id="page-resumen">
       <div class="page-header">
         <h1>Resumen</h1>
@@ -145,61 +206,59 @@
         <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;margin-left:auto" onclick="loadData()">↻ Actualizar</button>
       </div>
 
-      <!-- META MENSUAL LEADS -->
+      <!-- NOTA IMPORTANTE -->
+      <div class="nota-importante-box">
+        <div class="ni-header">
+          <span style="font-size:16px">📌</span>
+          <span class="ni-title">Nota importante del día</span>
+          <span class="ni-date" id="ni-date"></span>
+        </div>
+        <div id="ni-text"><span class="ni-empty">Sin nota importante registrada hoy.</span></div>
+      </div>
+
+      <!-- META LEADS MES -->
       <div class="meta-monthly">
-        <div>
+        <div style="flex:1">
           <div class="meta-title">Meta mensual · Leads</div>
           <div class="big" id="leads-mes-count">0</div>
-          <div style="margin-top:10px">
-            <div class="progress-bar" style="height:8px;width:220px">
-              <div class="progress-fill" id="leads-mes-bar" style="background:var(--accent2);width:0%"></div>
-            </div>
-          </div>
+          <div style="margin-top:10px"><div class="progress-bar" style="height:8px"><div class="progress-fill" id="leads-mes-bar" style="background:var(--accent2);width:0%"></div></div></div>
           <div class="meta-sub" id="leads-mes-label"></div>
         </div>
-        <div class="meta-info" style="text-align:right">
-          <div style="font-size:28px;font-weight:600;color:var(--muted)" id="leads-mes-meta">/ 72</div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:26px;font-weight:600;color:var(--muted)" id="leads-mes-meta">/ 72</div>
           <div style="font-size:11px;color:var(--muted);margin-top:4px">este mes</div>
         </div>
       </div>
 
       <!-- MÉTRICAS HOY -->
+      <div class="section-label">Hoy</div>
       <div class="metrics-grid">
-        <div class="metric-card accent-purple">
-          <div class="label">Leads hoy</div>
-          <div class="value" id="m-leads">—</div>
-          <div class="delta" id="m-leads-d"></div>
-        </div>
-        <div class="metric-card accent-blue">
-          <div class="label">Llamadas hoy</div>
-          <div class="value" id="m-calls">—</div>
-          <div class="goal-line" id="m-calls-g"></div>
-          <div class="delta" id="m-calls-d"></div>
-        </div>
-        <div class="metric-card accent-amber">
-          <div class="label">Mails hoy</div>
-          <div class="value" id="m-mails">—</div>
-          <div class="goal-line" id="m-mails-g"></div>
-          <div class="delta" id="m-mails-d"></div>
-        </div>
-        <div class="metric-card accent-wa">
-          <div class="label">WhatsApp hoy</div>
-          <div class="value" id="m-wa">—</div>
-          <div class="delta" id="m-wa-d"></div>
-        </div>
-        <div class="metric-card accent-green">
-          <div class="label">Ventas cerradas hoy</div>
-          <div class="value" id="m-sales">—</div>
-          <div class="delta" id="m-sales-d"></div>
+        <div class="metric-card accent-purple"><div class="label">Leads</div><div class="value" id="m-leads">—</div><div class="delta" id="m-leads-d"></div></div>
+        <div class="metric-card accent-blue"><div class="label">Llamadas</div><div class="value" id="m-calls">—</div><div class="goal-line" id="m-calls-g"></div><div class="delta" id="m-calls-d"></div></div>
+        <div class="metric-card accent-amber"><div class="label">Mails</div><div class="value" id="m-mails">—</div><div class="goal-line" id="m-mails-g"></div><div class="delta" id="m-mails-d"></div></div>
+        <div class="metric-card accent-wa"><div class="label">WhatsApp</div><div class="value" id="m-wa">—</div><div class="delta" id="m-wa-d"></div></div>
+        <div class="metric-card accent-pink"><div class="label">Reuniones</div><div class="value" id="m-meet">—</div><div class="delta" id="m-meet-d"></div></div>
+        <div class="metric-card accent-green"><div class="label">Ventas</div><div class="value" id="m-sales">—</div><div class="delta" id="m-sales-d"></div></div>
+      </div>
+
+      <!-- ACUMULADO MES -->
+      <div class="month-banner">
+        <h2>Acumulado del mes</h2>
+        <div class="month-stats">
+          <div><div class="ms-label">Leads</div><div class="ms-value" style="color:var(--accent2)" id="mes-leads">0</div></div>
+          <div><div class="ms-label">Llamadas</div><div class="ms-value" style="color:var(--blue)" id="mes-calls">0</div></div>
+          <div><div class="ms-label">Mails</div><div class="ms-value" style="color:var(--amber)" id="mes-mails">0</div></div>
+          <div><div class="ms-label">WhatsApp</div><div class="ms-value" style="color:var(--wa)" id="mes-wa">0</div></div>
+          <div><div class="ms-label">Reuniones</div><div class="ms-value" style="color:var(--pink)" id="mes-meet">0</div></div>
+          <div><div class="ms-label">Ventas</div><div class="ms-value" style="color:var(--green)" id="mes-sales">0</div></div>
         </div>
       </div>
 
-      <div class="section-grid">
+      <!-- CHART + METAS DIARIAS -->
+      <div class="two-col">
         <div class="card">
           <h2>Actividad esta semana</h2>
-          <div class="chart-container">
-            <canvas id="chartSemana" role="img" aria-label="Actividad semanal">Actividad de la semana.</canvas>
-          </div>
+          <div class="chart-container"><canvas id="chartSemana"></canvas></div>
         </div>
         <div class="card">
           <h2>Metas diarias · hoy</h2>
@@ -207,79 +266,133 @@
         </div>
       </div>
 
+      <!-- METAS REUNIONES -->
+      <div class="two-col">
+        <div class="card"><h2>Reuniones · semana</h2><div id="meet-semana-progress"></div></div>
+        <div class="card"><h2>Reuniones · mes</h2><div id="meet-mes-progress"></div></div>
+      </div>
+
+      <!-- ACTIVIDADES HOY -->
       <div class="card">
         <h2>Actividades de hoy</h2>
-        <div id="nota-hoy" style="color:var(--muted);font-size:14px;">Sin registro para hoy aún.</div>
+        <div id="nota-hoy" style="color:var(--muted);font-size:14px;"></div>
       </div>
     </div>
 
-    <!-- REGISTRO -->
+    <!-- ══════════ REGISTRO ══════════ -->
     <div class="page" id="page-registro">
       <div class="page-header">
         <h1>Registrar día</h1>
-        <div class="sub">Agrega o edita el registro del día</div>
+        <div class="sub" id="reg-fecha-label"></div>
       </div>
+
+      <!-- FECHA -->
       <div class="card">
-        <h2>Fecha</h2>
-        <div class="form-row single">
-          <div class="field"><label>Fecha del registro</label><input type="date" id="reg-fecha"></div>
+        <h2>¿Para qué día es este registro?</h2>
+        <div class="date-toggle">
+          <label><input type="checkbox" id="otro-dia-check" onchange="toggleOtroDia()"> Es para otro día</label>
         </div>
+        <div id="otro-dia-picker" style="display:none;max-width:220px">
+          <div class="field"><label>Selecciona la fecha</label><input type="date" id="reg-fecha-custom" onchange="onFechaChange()"></div>
+        </div>
+        <input type="hidden" id="reg-fecha">
       </div>
+
+      <!-- ACUMULADO PREVIO -->
+      <div id="acum-banner" class="acum-banner" style="display:none"></div>
+
+      <!-- MÉTRICAS -->
       <div class="card">
-        <h2>Métricas del día</h2>
-        <div class="form-row five">
-          <div class="field"><label>Leads creados</label><input type="number" id="reg-leads" min="0" placeholder="0"></div>
-          <div class="field"><label>Llamadas hechas</label><input type="number" id="reg-calls" min="0" placeholder="0"></div>
-          <div class="field"><label>Mails enviados</label><input type="number" id="reg-mails" min="0" placeholder="0"></div>
-          <div class="field"><label>Mensajes WhatsApp</label><input type="number" id="reg-wa" min="0" placeholder="0"></div>
-          <div class="field"><label>Ventas cerradas</label><input type="number" id="reg-sales" min="0" placeholder="0"></div>
+        <h2>¿Cuánto hiciste? (se suma a lo que ya tenías hoy)</h2>
+        <div class="form-row six">
+          <div class="field"><label>Leads</label><input type="number" id="reg-leads" min="0" placeholder="0"></div>
+          <div class="field"><label>Llamadas</label><input type="number" id="reg-calls" min="0" placeholder="0"></div>
+          <div class="field"><label>Mails</label><input type="number" id="reg-mails" min="0" placeholder="0"></div>
+          <div class="field"><label>WhatsApp</label><input type="number" id="reg-wa" min="0" placeholder="0"></div>
+          <div class="field"><label>Reuniones</label><input type="number" id="reg-meet" min="0" placeholder="0"></div>
+          <div class="field"><label>Ventas</label><input type="number" id="reg-sales" min="0" placeholder="0"></div>
         </div>
       </div>
+
+      <!-- NOTAS -->
       <div class="card">
-        <h2>Actividades del día</h2>
+        <h2>Notas del día</h2>
         <div class="form-row single">
-          <div class="field"><label>¿Qué hiciste hoy?</label><textarea id="reg-actividades" placeholder="Ej: Llamé a 3 prospectos, seguimiento propuesta Empresa X, reunión de pipeline…"></textarea></div>
+          <div class="field">
+            <label>📌 Nota importante (visible para tu líder)</label>
+            <textarea class="highlight" id="reg-nota-importante" placeholder="Ej: Cerré propuesta con Empresa X, pendiente aprobación…"></textarea>
+          </div>
         </div>
         <div class="form-row single">
-          <div class="field"><label>Notas adicionales</label><textarea id="reg-notas" placeholder="Bloqueos, aprendizajes, próximos pasos…"></textarea></div>
+          <div class="field">
+            <label>Actividades del día</label>
+            <textarea id="reg-actividades" placeholder="Ej: Llamé a 3 prospectos, seguimiento Empresa X…"></textarea>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Notas adicionales</label>
+            <textarea id="reg-notas" placeholder="Bloqueos, aprendizajes, próximos pasos…"></textarea>
+          </div>
         </div>
       </div>
-      <div style="display:flex;gap:12px">
-        <button class="btn btn-primary" onclick="saveEntry()">💾 Guardar registro</button>
-        <button class="btn btn-secondary" onclick="clearForm()">Limpiar</button>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="btn btn-primary" onclick="saveEntry()">➕ Agregar al registro del día</button>
+        <button class="btn btn-secondary" onclick="clearForm()">Limpiar campos</button>
       </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:10px">Los números que ingreses se suman al total del día. Las notas reemplazan las anteriores.</div>
     </div>
 
-    <!-- HISTORIAL -->
+    <!-- ══════════ HISTORIAL ══════════ -->
     <div class="page" id="page-historial">
-      <div class="page-header"><h1>Historial</h1><div class="sub">Todos tus registros</div></div>
-      <div class="actions-row">
-        <input type="month" id="filtro-mes" style="padding:8px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;outline:none">
-        <button class="btn btn-secondary" onclick="filterHistory()">Filtrar</button>
-        <button class="btn btn-secondary" onclick="filterHistory(true)">Ver todo</button>
+      <div class="page-header"><h1>Historial</h1><div class="sub">Navega por meses anteriores</div></div>
+      <div class="month-nav">
+        <button class="btn btn-secondary" style="padding:6px 14px;font-size:13px" onclick="changeMonth(-1)">← Anterior</button>
+        <span id="hist-mes-label" style="font-size:14px;font-weight:500;min-width:140px;text-align:center"></span>
+        <button class="btn btn-secondary" style="padding:6px 14px;font-size:13px" onclick="changeMonth(1)">Siguiente →</button>
+        <button class="btn btn-secondary" style="padding:6px 14px;font-size:13px;margin-left:auto" onclick="goToCurrentMonth()">Mes actual</button>
+      </div>
+      <div class="month-banner">
+        <h2 id="hist-banner-title">Resumen del mes</h2>
+        <div class="month-stats">
+          <div><div class="ms-label">Leads</div><div class="ms-value" style="color:var(--accent2)" id="hmes-leads">0</div></div>
+          <div><div class="ms-label">Llamadas</div><div class="ms-value" style="color:var(--blue)" id="hmes-calls">0</div></div>
+          <div><div class="ms-label">Mails</div><div class="ms-value" style="color:var(--amber)" id="hmes-mails">0</div></div>
+          <div><div class="ms-label">WhatsApp</div><div class="ms-value" style="color:var(--wa)" id="hmes-wa">0</div></div>
+          <div><div class="ms-label">Reuniones</div><div class="ms-value" style="color:var(--pink)" id="hmes-meet">0</div></div>
+          <div><div class="ms-label">Ventas</div><div class="ms-value" style="color:var(--green)" id="hmes-sales">0</div></div>
+        </div>
       </div>
       <div class="card" style="padding:0">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Fecha</th><th>Leads</th><th>Llamadas</th><th>Mails</th><th>WhatsApp</th><th>Ventas</th><th>Actividades</th><th></th></tr></thead>
-            <tbody id="tabla-historial"><tr><td colspan="8" class="empty-state">Sin registros aún.</td></tr></tbody>
+            <thead><tr><th>Fecha</th><th>Leads</th><th>Llamadas</th><th>Mails</th><th>WA</th><th>Reuniones</th><th>Ventas</th><th>Nota importante</th><th></th></tr></thead>
+            <tbody id="tabla-historial"><tr><td colspan="9" class="empty-state">Sin registros.</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- METAS -->
+    <!-- ══════════ METAS ══════════ -->
     <div class="page" id="page-metas">
       <div class="page-header"><h1>Metas</h1><div class="sub">Configura tus objetivos</div></div>
       <div class="card">
         <h2>Meta mensual</h2>
-        <div class="form-row single" style="max-width:200px">
+        <div class="form-row" style="max-width:400px">
           <div class="field"><label>Leads / mes</label><input type="number" id="meta-leads-mes" min="0" placeholder="72"></div>
+          <div class="field"><label>Reuniones / mes</label><input type="number" id="meta-meet-mes" min="0" placeholder="8"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Meta semanal</h2>
+        <div class="form-row single" style="max-width:200px">
+          <div class="field"><label>Reuniones / semana</label><input type="number" id="meta-meet-sem" min="0" placeholder="2"></div>
         </div>
       </div>
       <div class="card">
         <h2>Metas diarias</h2>
-        <div class="form-row three">
+        <div class="form-row three" style="max-width:600px">
           <div class="field"><label>Llamadas / día</label><input type="number" id="meta-calls-dia" min="0" placeholder="8"></div>
           <div class="field"><label>Mails / día</label><input type="number" id="meta-mails-dia" min="0" placeholder="10"></div>
           <div class="field"><label>WhatsApp / día</label><input type="number" id="meta-wa-dia" min="0" placeholder="0"></div>
@@ -297,28 +410,71 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+// ─── CONFIG ───────────────────────────────────────
 const GH_USER = 'flarisarriol';
 const GH_REPO = 'mi-dashboard';
 const GH_FILE = 'data.json';
 const GH_BRANCH = 'main';
 const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+// URL raw pública — no necesita token (lo puede leer tu líder)
+const GH_RAW = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
 
-let state = {
-  entries: [],
-  metas: { leadsMes: 72, callsDia: 8, mailsDia: 10, waDia: 0 }
-};
+let state = { entries: [], metas: { leadsMes:72, meetMes:8, meetSem:2, callsDia:8, mailsDia:10, waDia:0 } };
 let fileSha = null;
 let weekChart = null;
+let histMonth = null;
+let regFecha = null; // fecha activa en el form de registro
 
+// ─── INIT ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const today = new Date().toISOString().split('T')[0];
-  document.getElementById('reg-fecha').value = today;
-  document.getElementById('fecha-hoy').textContent = formatDate(today);
+  histMonth = today.slice(0, 7);
+  document.getElementById('fecha-hoy').textContent = formatDateLong(today);
+  setRegFecha(today);
   const t = localStorage.getItem('gh_token');
   if (t) document.getElementById('gh-token').value = '••••••••••••';
   loadData();
 });
 
+// ─── FECHA REGISTRO ────────────────────────────────
+function setRegFecha(fecha) {
+  regFecha = fecha;
+  document.getElementById('reg-fecha').value = fecha;
+  document.getElementById('reg-fecha-label').textContent =
+    fecha === new Date().toISOString().split('T')[0]
+      ? 'Registrando para hoy · ' + formatDateLong(fecha)
+      : 'Registrando para · ' + formatDateLong(fecha);
+  updateAcumBanner();
+}
+
+function toggleOtroDia() {
+  const checked = document.getElementById('otro-dia-check').checked;
+  document.getElementById('otro-dia-picker').style.display = checked ? 'block' : 'none';
+  if (!checked) setRegFecha(new Date().toISOString().split('T')[0]);
+}
+
+function onFechaChange() {
+  const val = document.getElementById('reg-fecha-custom').value;
+  if (val) setRegFecha(val);
+}
+
+function updateAcumBanner() {
+  const banner = document.getElementById('acum-banner');
+  const existing = state.entries.find(e => e.fecha === regFecha);
+  if (!existing) { banner.style.display = 'none'; return; }
+  banner.style.display = 'block';
+  banner.innerHTML = `<strong>Ya tienes registro para este día.</strong> Lo que ingreses se sumará al total actual:
+    <div class="acum-chips">
+      <div class="acum-chip">Leads <span>${existing.leads}</span></div>
+      <div class="acum-chip">Llamadas <span>${existing.calls}</span></div>
+      <div class="acum-chip">Mails <span>${existing.mails}</span></div>
+      <div class="acum-chip">WA <span>${existing.wa||0}</span></div>
+      <div class="acum-chip">Reuniones <span>${existing.meet||0}</span></div>
+      <div class="acum-chip">Ventas <span>${existing.sales}</span></div>
+    </div>`;
+}
+
+// ─── GITHUB ────────────────────────────────────────
 function saveToken() {
   const val = document.getElementById('gh-token').value.trim();
   if (!val || val.startsWith('•')) return toast('Ingresa un token válido');
@@ -329,37 +485,49 @@ function saveToken() {
 }
 
 async function loadData() {
-  setSyncStatus('loading', 'Sincronizando…');
+  setSyncStatus('loading', 'Cargando datos…');
   const token = localStorage.getItem('gh_token');
-  if (!token) { setSyncStatus('error', 'Sin token — datos locales'); loadLocal(); return; }
   try {
-    const res = await fetch(GH_API + '?ref=' + GH_BRANCH, {
-      headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (res.status === 404) { fileSha = null; setSyncStatus('ok', 'Conectado · sin datos aún'); renderAll(); return; }
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    fileSha = json.sha;
-    const decoded = JSON.parse(atob(json.content.replace(/\n/g, '')));
-    state = {
-      entries: decoded.entries || [],
-      metas: Object.assign({ leadsMes: 72, callsDia: 8, mailsDia: 10, waDia: 0 }, decoded.metas)
-    };
-    setSyncStatus('ok', 'Sincronizado · ' + new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }));
+    // Intenta leer con token si existe (para obtener sha), si no usa raw público
+    if (token) {
+      const res = await fetch(GH_API + '?ref=' + GH_BRANCH + '&t=' + Date.now(), {
+        headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (res.status === 404) { fileSha = null; setSyncStatus('ok', 'Conectado · sin datos aún'); renderAll(); return; }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      fileSha = json.sha;
+      const decoded = JSON.parse(atob(json.content.replace(/\n/g,'')));
+      mergeState(decoded);
+    } else {
+      // Sin token: lectura pública (tu líder)
+      const res = await fetch(GH_RAW + '?t=' + Date.now());
+      if (!res.ok) { setSyncStatus('error', 'Sin acceso a datos'); loadLocal(); return; }
+      const decoded = await res.json();
+      mergeState(decoded);
+    }
+    setSyncStatus('ok', token ? 'Sincronizado · ' + hhmm() : 'Modo lectura · datos en vivo');
     saveLocal(); renderAll();
-  } catch (e) {
+  } catch(e) {
     setSyncStatus('error', 'Error: ' + e.message);
     loadLocal();
   }
 }
 
+function mergeState(decoded) {
+  state = {
+    entries: decoded.entries || [],
+    metas: Object.assign({ leadsMes:72, meetMes:8, meetSem:2, callsDia:8, mailsDia:10, waDia:0 }, decoded.metas)
+  };
+}
+
 async function pushData() {
   const token = localStorage.getItem('gh_token');
-  if (!token) { saveLocal(); toast('Guardado local (sin token)'); return; }
+  if (!token) { saveLocal(); toast('Sin token — no se puede guardar en GitHub'); return; }
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
   const body = { message: 'update data', content, branch: GH_BRANCH };
   if (fileSha) body.sha = fileSha;
-  setSyncStatus('loading', 'Guardando en GitHub…');
+  setSyncStatus('loading', 'Guardando…');
   try {
     const res = await fetch(GH_API, {
       method: 'PUT',
@@ -369,46 +537,72 @@ async function pushData() {
     if (!res.ok) { const err = await res.json(); throw new Error(err.message); }
     const json = await res.json();
     fileSha = json.content.sha;
-    setSyncStatus('ok', 'Guardado ✓ · ' + new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }));
+    setSyncStatus('ok', 'Guardado ✓ · ' + hhmm());
     saveLocal(); toast('Registro guardado ✓');
-  } catch (e) {
+  } catch(e) {
     setSyncStatus('error', 'Error: ' + e.message);
-    saveLocal(); toast('Guardado local · error GitHub: ' + e.message);
+    saveLocal(); toast('Error al guardar: ' + e.message);
   }
 }
 
-function saveLocal() { localStorage.setItem('dashboard_state', JSON.stringify(state)); }
+function saveLocal() { localStorage.setItem('ds_state', JSON.stringify(state)); }
 function loadLocal() {
-  const s = localStorage.getItem('dashboard_state');
+  const s = localStorage.getItem('ds_state');
   if (s) { try { state = JSON.parse(s); } catch(e) {} }
+  setSyncStatus('error', 'Datos locales (sin conexión)');
   renderAll();
 }
 
+// ─── NAVIGATION ────────────────────────────────────
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   if (btn) btn.classList.add('active');
+  if (id === 'registro') updateAcumBanner();
   renderAll();
 }
 
+// ─── ENTRY CRUD ────────────────────────────────────
 function saveEntry() {
-  const fecha = document.getElementById('reg-fecha').value;
+  const fecha = regFecha;
   if (!fecha) return toast('Elige una fecha');
-  const entry = {
-    fecha,
-    leads: parseInt(document.getElementById('reg-leads').value) || 0,
-    calls: parseInt(document.getElementById('reg-calls').value) || 0,
-    mails: parseInt(document.getElementById('reg-mails').value) || 0,
-    wa: parseInt(document.getElementById('reg-wa').value) || 0,
-    sales: parseInt(document.getElementById('reg-sales').value) || 0,
-    actividades: document.getElementById('reg-actividades').value.trim(),
-    notas: document.getElementById('reg-notas').value.trim(),
-    ts: new Date().toISOString()
-  };
-  const idx = state.entries.findIndex(e => e.fecha === fecha);
-  if (idx >= 0) state.entries[idx] = entry; else state.entries.push(entry);
-  state.entries.sort((a, b) => b.fecha.localeCompare(a.fecha));
+
+  const add = (id) => parseInt(document.getElementById(id).value) || 0;
+  const existing = state.entries.find(e => e.fecha === fecha);
+
+  if (existing) {
+    // MODO ACUMULATIVO: suma los números nuevos
+    existing.leads += add('reg-leads');
+    existing.calls += add('reg-calls');
+    existing.mails += add('reg-mails');
+    existing.wa = (existing.wa || 0) + add('reg-wa');
+    existing.meet = (existing.meet || 0) + add('reg-meet');
+    existing.sales += add('reg-sales');
+    // Notas: reemplaza solo si se escribió algo nuevo
+    const ni = document.getElementById('reg-nota-importante').value.trim();
+    const act = document.getElementById('reg-actividades').value.trim();
+    const not = document.getElementById('reg-notas').value.trim();
+    if (ni) existing.notaImportante = ni;
+    if (act) existing.actividades = (existing.actividades ? existing.actividades + '\n' + act : act);
+    if (not) existing.notas = (existing.notas ? existing.notas + '\n' + not : not);
+    existing.ts = new Date().toISOString();
+  } else {
+    // NUEVO REGISTRO
+    state.entries.push({
+      fecha,
+      leads: add('reg-leads'), calls: add('reg-calls'), mails: add('reg-mails'),
+      wa: add('reg-wa'), meet: add('reg-meet'), sales: add('reg-sales'),
+      notaImportante: document.getElementById('reg-nota-importante').value.trim(),
+      actividades: document.getElementById('reg-actividades').value.trim(),
+      notas: document.getElementById('reg-notas').value.trim(),
+      ts: new Date().toISOString()
+    });
+  }
+
+  state.entries.sort((a,b) => b.fecha.localeCompare(a.fecha));
+  clearForm();
+  updateAcumBanner();
   pushData(); renderAll();
 }
 
@@ -419,29 +613,52 @@ function deleteEntry(fecha) {
 }
 
 function editEntry(fecha) {
+  // En modo edición directa: carga los totales para que el usuario los corrija
   const e = state.entries.find(e => e.fecha === fecha);
   if (!e) return;
-  document.getElementById('reg-fecha').value = e.fecha;
+  // Elimina el registro y precarga los valores para que el usuario los edite
+  const confirmMsg = `Vas a editar el registro completo del ${formatDate(fecha)}.\nLos campos de número mostrarán el TOTAL actual. Guarda cuando termines.`;
+  if (!confirm(confirmMsg)) return;
+
+  // Poner fecha en "otro día" si no es hoy
+  const today = new Date().toISOString().split('T')[0];
+  if (fecha !== today) {
+    document.getElementById('otro-dia-check').checked = true;
+    document.getElementById('otro-dia-picker').style.display = 'block';
+    document.getElementById('reg-fecha-custom').value = fecha;
+  }
+  setRegFecha(fecha);
+
+  // Quitar entrada para que al guardar se cree de nuevo (no acumule)
+  state.entries = state.entries.filter(en => en.fecha !== fecha);
+
+  // Pre-llenar con totales actuales
   document.getElementById('reg-leads').value = e.leads;
   document.getElementById('reg-calls').value = e.calls;
   document.getElementById('reg-mails').value = e.mails;
   document.getElementById('reg-wa').value = e.wa || 0;
+  document.getElementById('reg-meet').value = e.meet || 0;
   document.getElementById('reg-sales').value = e.sales;
-  document.getElementById('reg-actividades').value = e.actividades;
-  document.getElementById('reg-notas').value = e.notas;
+  document.getElementById('reg-nota-importante').value = e.notaImportante || '';
+  document.getElementById('reg-actividades').value = e.actividades || '';
+  document.getElementById('reg-notas').value = e.notas || '';
+
+  updateAcumBanner();
   showPage('registro');
   document.querySelectorAll('.nav-item')[1].classList.add('active');
   document.querySelectorAll('.nav-item')[0].classList.remove('active');
 }
 
 function clearForm() {
-  ['reg-leads','reg-calls','reg-mails','reg-wa','reg-sales','reg-actividades','reg-notas'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('reg-fecha').value = new Date().toISOString().split('T')[0];
+  ['reg-leads','reg-calls','reg-mails','reg-wa','reg-meet','reg-sales',
+   'reg-nota-importante','reg-actividades','reg-notas'].forEach(id => document.getElementById(id).value = '');
 }
 
 function saveMetas() {
   state.metas = {
     leadsMes: parseInt(document.getElementById('meta-leads-mes').value) || 72,
+    meetMes: parseInt(document.getElementById('meta-meet-mes').value) || 8,
+    meetSem: parseInt(document.getElementById('meta-meet-sem').value) || 2,
     callsDia: parseInt(document.getElementById('meta-calls-dia').value) || 8,
     mailsDia: parseInt(document.getElementById('meta-mails-dia').value) || 10,
     waDia: parseInt(document.getElementById('meta-wa-dia').value) || 0,
@@ -449,123 +666,174 @@ function saveMetas() {
   pushData(); renderAll(); toast('Metas guardadas ✓');
 }
 
+// ─── RENDER ────────────────────────────────────────
 function renderAll() { renderResumen(); renderHistorial(); renderMetas(); }
 
 function renderResumen() {
   const today = new Date().toISOString().split('T')[0];
-  const todayEntry = state.entries.find(e => e.fecha === today);
-  const yday = getPrevEntry(today);
+  const te = state.entries.find(e => e.fecha === today);
+  const ye = getPrevEntry(today);
 
-  setMetric('m-leads', todayEntry?.leads, yday?.leads);
-  setMetric('m-calls', todayEntry?.calls, yday?.calls);
-  setMetric('m-mails', todayEntry?.mails, yday?.mails);
-  setMetric('m-wa', todayEntry?.wa, yday?.wa);
-  setMetric('m-sales', todayEntry?.sales, yday?.sales);
+  // Nota importante
+  const niText = document.getElementById('ni-text');
+  const niDate = document.getElementById('ni-date');
+  if (te?.notaImportante) {
+    niText.innerHTML = `<div class="ni-text">${escHtml(te.notaImportante)}</div>`;
+    niDate.textContent = formatDate(today);
+  } else {
+    niText.innerHTML = '<span class="ni-empty">Sin nota importante registrada hoy.</span>';
+    niDate.textContent = '';
+  }
 
-  // Goal lines for daily metrics
-  const gCalls = document.getElementById('m-calls-g');
-  const gMails = document.getElementById('m-mails-g');
-  if (gCalls) gCalls.textContent = 'meta: ' + state.metas.callsDia + ' / día';
-  if (gMails) gMails.textContent = 'meta: ' + state.metas.mailsDia + ' / día';
+  setMetric('m-leads', te?.leads, ye?.leads);
+  setMetric('m-calls', te?.calls, ye?.calls);
+  setMetric('m-mails', te?.mails, ye?.mails);
+  setMetric('m-wa', te?.wa, ye?.wa);
+  setMetric('m-meet', te?.meet, ye?.meet);
+  setMetric('m-sales', te?.sales, ye?.sales);
 
-  // Meta mensual leads
-  const mesActual = today.slice(0, 7);
-  const leadsDelMes = state.entries.filter(e => e.fecha.startsWith(mesActual)).reduce((s, e) => s + (e.leads || 0), 0);
-  const metaMes = state.metas.leadsMes || 72;
-  const pctMes = Math.min(100, Math.round((leadsDelMes / metaMes) * 100));
-  document.getElementById('leads-mes-count').textContent = leadsDelMes;
-  document.getElementById('leads-mes-meta').textContent = '/ ' + metaMes;
-  document.getElementById('leads-mes-bar').style.width = pctMes + '%';
-  const restantes = metaMes - leadsDelMes;
+  const g = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = 'meta: ' + val + ' / día'; };
+  g('m-calls-g', state.metas.callsDia);
+  g('m-mails-g', state.metas.mailsDia);
+
+  // Acumulado mes
+  const mes = today.slice(0,7);
+  const mesE = state.entries.filter(e => e.fecha.startsWith(mes));
+  const sum = k => mesE.reduce((s,e) => s+(e[k]||0), 0);
+  ['leads','calls','mails','wa','meet','sales'].forEach(k => {
+    const el = document.getElementById('mes-' + k); if(el) el.textContent = sum(k);
+  });
+
+  // Meta leads mes
+  const lm = sum('leads'), mm = state.metas.leadsMes || 72;
+  const pct = Math.min(100, Math.round(lm/mm*100));
+  document.getElementById('leads-mes-count').textContent = lm;
+  document.getElementById('leads-mes-meta').textContent = '/ ' + mm;
+  document.getElementById('leads-mes-bar').style.width = pct + '%';
   document.getElementById('leads-mes-label').textContent =
-    restantes > 0 ? `Faltan ${restantes} leads para la meta del mes (${pctMes}%)` : '¡Meta del mes alcanzada! 🎉';
+    lm >= mm ? '¡Meta del mes alcanzada! 🎉' : `Faltan ${mm - lm} leads (${pct}%)`;
 
+  // Actividades hoy
   document.getElementById('nota-hoy').textContent =
-    todayEntry ? (todayEntry.actividades || todayEntry.notas || 'Sin nota.') : 'Sin registro para hoy aún. Ve a "Registrar día" →';
+    te ? (te.actividades || te.notas || 'Sin actividades registradas.') : 'Sin registro para hoy. Ve a "Registrar día" →';
 
   renderWeekChart();
   renderMetasProgress('metas-progress');
+  renderMeetProgress();
 }
 
 function setMetric(id, val, prev) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = val !== undefined ? val : '—';
-  const dEl = document.getElementById(id + '-d');
+  const el = document.getElementById(id); if(el) el.textContent = val !== undefined ? val : '—';
+  const dEl = document.getElementById(id+'-d');
   if (dEl && val !== undefined && prev !== undefined) {
     const diff = val - prev;
     dEl.textContent = (diff >= 0 ? '↑ +' : '↓ ') + diff + ' vs ayer';
     dEl.style.color = diff >= 0 ? 'var(--green)' : 'var(--red)';
-  } else if (dEl) { dEl.textContent = ''; }
+  } else if (dEl) dEl.textContent = '';
 }
 
 function renderWeekChart() {
   const days = getWeekDays();
-  const labels = days.map(d => formatShortDate(d));
-  const get = (d, k) => (state.entries.find(e => e.fecha === d) || {})[k] || 0;
+  const get = (d,k) => (state.entries.find(e=>e.fecha===d)||{})[k]||0;
   const ctx = document.getElementById('chartSemana');
   if (!ctx) return;
   if (weekChart) weekChart.destroy();
   weekChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels,
+      labels: days.map(formatShortDate),
       datasets: [
-        { label: 'Leads', data: days.map(d => get(d,'leads')), backgroundColor: 'rgba(108,99,255,0.75)', borderRadius: 4 },
-        { label: 'Llamadas', data: days.map(d => get(d,'calls')), backgroundColor: 'rgba(59,130,246,0.75)', borderRadius: 4 },
-        { label: 'Mails', data: days.map(d => get(d,'mails')), backgroundColor: 'rgba(245,158,11,0.75)', borderRadius: 4 },
-        { label: 'WA', data: days.map(d => get(d,'wa')), backgroundColor: 'rgba(37,211,102,0.75)', borderRadius: 4 },
+        { label:'Leads',    data: days.map(d=>get(d,'leads')),  backgroundColor:'rgba(108,99,255,0.75)', borderRadius:4 },
+        { label:'Llamadas', data: days.map(d=>get(d,'calls')),  backgroundColor:'rgba(59,130,246,0.75)',  borderRadius:4 },
+        { label:'Mails',    data: days.map(d=>get(d,'mails')),  backgroundColor:'rgba(245,158,11,0.75)', borderRadius:4 },
+        { label:'WA',       data: days.map(d=>get(d,'wa')),     backgroundColor:'rgba(37,211,102,0.75)', borderRadius:4 },
+        { label:'Reuniones',data: days.map(d=>get(d,'meet')),   backgroundColor:'rgba(236,72,153,0.75)', borderRadius:4 },
       ]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-        y: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ ticks:{color:'#888',font:{size:11}}, grid:{color:'rgba(255,255,255,0.05)'} },
+        y:{ ticks:{color:'#888',font:{size:11}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true }
       }
     }
   });
 }
 
-function renderMetasProgress(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
+function renderMetasProgress(cid) {
+  const container = document.getElementById(cid); if(!container) return;
   const today = new Date().toISOString().split('T')[0];
-  const e = state.entries.find(e => e.fecha === today) || {};
+  const e = state.entries.find(e=>e.fecha===today)||{};
   const items = [
-    { key: 'calls', label: 'Llamadas', actual: e.calls || 0, meta: state.metas.callsDia, color: '#3b82f6' },
-    { key: 'mails', label: 'Mails', actual: e.mails || 0, meta: state.metas.mailsDia, color: '#f59e0b' },
-    { key: 'wa', label: 'WhatsApp', actual: e.wa || 0, meta: state.metas.waDia, color: '#25d366' },
+    { label:'Llamadas', actual:e.calls||0, meta:state.metas.callsDia, color:'#3b82f6' },
+    { label:'Mails',    actual:e.mails||0, meta:state.metas.mailsDia, color:'#f59e0b' },
+    { label:'WhatsApp', actual:e.wa||0,    meta:state.metas.waDia,    color:'#25d366' },
   ];
-  container.innerHTML = items.map(item => {
-    const meta = item.meta || 1;
-    const pct = Math.min(100, Math.round((item.actual / meta) * 100));
-    const color = item.actual >= meta ? 'var(--green)' : item.color;
-    return `
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span class="goal-name">${item.label}</span>
-          <span class="goal-count">${item.actual} / ${meta} · ${pct}%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
-      </div>`;
+  container.innerHTML = items.map(it => {
+    const meta = it.meta||1, pct = Math.min(100,Math.round(it.actual/meta*100));
+    return `<div class="progress-wrap">
+      <div class="progress-label"><span class="goal-name">${it.label}</span><span class="goal-count">${it.actual} / ${meta} · ${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${it.actual>=meta?'var(--green)':it.color}"></div></div>
+    </div>`;
   }).join('');
 }
 
-function renderHistorial(filter) {
+function renderMeetProgress() {
+  const weekDays = getWeekDays();
+  const mSem = weekDays.reduce((s,d)=>s+((state.entries.find(e=>e.fecha===d)||{}).meet||0),0);
+  const metaSem = state.metas.meetSem||1, pctSem=Math.min(100,Math.round(mSem/metaSem*100));
+  const semEl = document.getElementById('meet-semana-progress');
+  if (semEl) semEl.innerHTML = `<div class="progress-wrap">
+    <div class="progress-label"><span class="goal-name">Esta semana</span><span class="goal-count">${mSem} / ${metaSem}</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pctSem}%;background:${mSem>=metaSem?'var(--green)':'var(--pink)'}"></div></div>
+  </div><div style="font-size:13px;color:var(--muted);margin-top:8px">${mSem>=metaSem?'¡Meta semanal alcanzada! 🎉':'Faltan '+(metaSem-mSem)+' reuniones'}</div>`;
+
+  const today = new Date().toISOString().split('T')[0];
+  const mes = today.slice(0,7);
+  const mMes = state.entries.filter(e=>e.fecha.startsWith(mes)).reduce((s,e)=>s+(e.meet||0),0);
+  const metaMes = state.metas.meetMes||1, pctMes=Math.min(100,Math.round(mMes/metaMes*100));
+  const mesEl = document.getElementById('meet-mes-progress');
+  if (mesEl) mesEl.innerHTML = `<div class="progress-wrap">
+    <div class="progress-label"><span class="goal-name">Este mes</span><span class="goal-count">${mMes} / ${metaMes}</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pctMes}%;background:${mMes>=metaMes?'var(--green)':'var(--pink)'}"></div></div>
+  </div><div style="font-size:13px;color:var(--muted);margin-top:8px">${mMes>=metaMes?'¡Meta mensual alcanzada! 🎉':'Faltan '+(metaMes-mMes)+' reuniones ('+pctMes+'%)'}</div>`;
+}
+
+// ─── HISTORIAL ─────────────────────────────────────
+function changeMonth(dir) {
+  const [y,m] = histMonth.split('-').map(Number);
+  const d = new Date(y, m-1+dir, 1);
+  histMonth = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  renderHistorial();
+}
+function goToCurrentMonth() { histMonth = new Date().toISOString().slice(0,7); renderHistorial(); }
+
+function renderHistorial() {
+  const [y,m] = histMonth.split('-').map(Number);
+  const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const label = months[m-1]+' '+y;
+  const el = document.getElementById('hist-mes-label'); if(el) el.textContent = label;
+  const bt = document.getElementById('hist-banner-title'); if(bt) bt.textContent = 'Resumen · '+label;
+
+  const entries = state.entries.filter(e=>e.fecha.startsWith(histMonth));
+  const sum = k => entries.reduce((s,e)=>s+(e[k]||0),0);
+  [['leads','hmes-leads'],['calls','hmes-calls'],['mails','hmes-mails'],
+   ['wa','hmes-wa'],['meet','hmes-meet'],['sales','hmes-sales']].forEach(([k,id])=>{
+    const el=document.getElementById(id); if(el) el.textContent=sum(k);
+  });
+
   const tbody = document.getElementById('tabla-historial');
-  let entries = [...state.entries];
-  if (filter) entries = entries.filter(e => e.fecha.startsWith(filter));
-  if (!entries.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Sin registros.</td></tr>'; return; }
-  tbody.innerHTML = entries.map(e => `
+  if (!entries.length) { tbody.innerHTML=`<tr><td colspan="9" class="empty-state">Sin registros en ${label}.</td></tr>`; return; }
+  tbody.innerHTML = entries.map(e=>`
     <tr>
-      <td>${formatDate(e.fecha)}</td>
+      <td style="white-space:nowrap">${formatDate(e.fecha)}</td>
       <td><span class="badge badge-blue">${e.leads}</span></td>
-      <td>${e.calls}</td>
-      <td>${e.mails}</td>
-      <td><span class="badge badge-wa">${e.wa || 0}</span></td>
-      <td><span class="badge ${e.sales > 0 ? 'badge-green' : 'badge-amber'}">${e.sales}</span></td>
-      <td class="muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.actividades || '—'}</td>
+      <td>${e.calls}</td><td>${e.mails}</td>
+      <td><span class="badge badge-wa">${e.wa||0}</span></td>
+      <td><span class="badge badge-pink">${e.meet||0}</span></td>
+      <td><span class="badge ${e.sales>0?'badge-green':'badge-amber'}">${e.sales}</span></td>
+      <td class="muted" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(e.notaImportante||'')}">${e.notaImportante?'📌 '+escHtml(e.notaImportante.slice(0,40))+(e.notaImportante.length>40?'…':''):'—'}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="editEntry('${e.fecha}')">Editar</button>
         <button class="btn btn-danger" style="padding:4px 10px;font-size:12px;margin-left:4px" onclick="deleteEntry('${e.fecha}')">Borrar</button>
@@ -573,58 +841,49 @@ function renderHistorial(filter) {
     </tr>`).join('');
 }
 
+// ─── METAS PAGE ────────────────────────────────────
 function renderMetas() {
   const m = state.metas;
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
-  set('meta-leads-mes', m.leadsMes);
-  set('meta-calls-dia', m.callsDia);
-  set('meta-mails-dia', m.mailsDia);
-  set('meta-wa-dia', m.waDia);
+  const s = (id,v)=>{ const el=document.getElementById(id); if(el) el.value=v||''; };
+  s('meta-leads-mes',m.leadsMes); s('meta-meet-mes',m.meetMes); s('meta-meet-sem',m.meetSem);
+  s('meta-calls-dia',m.callsDia); s('meta-mails-dia',m.mailsDia); s('meta-wa-dia',m.waDia);
   renderMetasProgress('metas-detalle');
 }
 
-function filterHistory(all) {
-  if (all) { renderHistorial(); return; }
-  const mes = document.getElementById('filtro-mes').value;
-  renderHistorial(mes || undefined);
-}
-
+// ─── HELPERS ───────────────────────────────────────
 function getWeekDays() {
-  const today = new Date();
-  const day = today.getDay();
+  const today = new Date(), day = today.getDay();
   const monday = new Date(today);
-  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
-  return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(monday); d.setDate(monday.getDate() + i);
-    return d.toISOString().split('T')[0];
-  });
+  monday.setDate(today.getDate()-(day===0?6:day-1));
+  return Array.from({length:7},(_,i)=>{ const d=new Date(monday); d.setDate(monday.getDate()+i); return d.toISOString().split('T')[0]; });
 }
-
 function getPrevEntry(fecha) {
-  const idx = state.entries.findIndex(e => e.fecha === fecha);
-  return idx >= 0 && idx + 1 < state.entries.length ? state.entries[idx + 1] : undefined;
+  const idx = state.entries.findIndex(e=>e.fecha===fecha);
+  return idx>=0&&idx+1<state.entries.length?state.entries[idx+1]:undefined;
 }
-
 function formatDate(d) {
-  const [y, m, day] = d.split('-');
-  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const [y,m,day]=d.split('-');
+  const months=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
 }
-
+function formatDateLong(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
 function formatShortDate(d) {
-  const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  return days[new Date(d + 'T12:00:00').getDay()];
+  return ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][new Date(d+'T12:00:00').getDay()];
 }
-
-function setSyncStatus(s, msg) {
-  document.getElementById('sync-dot').className = 'sync-dot ' + s;
-  document.getElementById('sync-label').textContent = msg;
+function hhmm() { return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); }
+function setSyncStatus(s,msg) {
+  document.getElementById('sync-dot').className='sync-dot '+s;
+  document.getElementById('sync-label').textContent=msg;
 }
-
 function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
