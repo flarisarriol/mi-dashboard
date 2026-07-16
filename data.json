@@ -1,6 +1,19 @@
 {
   "entries": [
     {
+      "fecha": "2026-07-15",
+      "leads": 0,
+      "calls": 0,
+      "mails": 50,
+      "wa": 10,
+      "meet": 0,
+      "sales": 0,
+      "notaImportante": "",
+      "actividades": "",
+      "notas": "",
+      "ts": "2026-07-16T16:14:12.135Z"
+    },
+    {
       "fecha": "2026-07-09",
       "leads": 0,
       "calls": 4,
@@ -21,7 +34,7 @@
       "wa": 0,
       "meet": 1,
       "sales": 0,
-      "notaImportante": "Se tuvo reuniÃ³n con Unlimited Experiences, sacada de la base de turismo, no llegan al TPV. Se mandaron otros 30 correos.",
+      "notaImportante": "Se tuvo reuniÃÂ³n con Unlimited Experiences, sacada de la base de turismo, no llegan al TPV. Se mandaron otros 30 correos.",
       "actividades": "",
       "notas": "",
       "ts": "2026-07-09T17:06:05.992Z"
